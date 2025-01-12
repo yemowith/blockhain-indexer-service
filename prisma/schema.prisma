@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contracts {
+  id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  address  String  @unique @db.VarChar(42)
+  isERC20  Boolean @default(false)
+  isERC721 Boolean @default(false)
+}
+
+model Transfers {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  from            String   @db.VarChar(42)
+  to              String   @db.VarChar(42)
+  value           Int
+  blockNumber     Int
+  transactionHash String   @db.VarChar(66)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Tokens {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  address   String   @db.VarChar(42)
+  symbol    String?  @db.VarChar(10)
+  name      String?  @db.VarChar(100)
+  decimals  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TokenTransfers {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tokenId         String   @db.Uuid
+  from            String   @db.VarChar(42)
+  to              String   @db.VarChar(42)
+  value           Int
+  blockNumber     Int
+  transactionHash String   @db.VarChar(66)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

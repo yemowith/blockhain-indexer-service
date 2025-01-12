@@ -1,0 +1,43 @@
+{
+  "name": "blockhain-indexer-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "nodemon src/index.ts",
+    "start:dev": "npx kill-port 3000 && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register src/index.ts",
+    "tester": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register src/test.ts",
+    "task:create-container": "ts-node src/core/tasks/taskrunner.ts create-container"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.723.0",
+    "@aws-sdk/client-ecs": "^3.723.0",
+    "@aws-sdk/client-sqs": "^3.726.0",
+    "@prisma/client": "^6.2.1",
+    "bip39": "^3.1.0",
+    "ethers": "^6.13.5",
+    "express": "^4.21.2",
+    "ioredis": "^5.4.2",
+    "nanoid": "^5.0.9",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@aws-sdk/types": "^3.723.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.4.2",
+    "@types/pg": "^8.11.10",
+    "dotenv": "^16.4.7",
+    "nodemon": "^3.1.9",
+    "prisma": "^6.1.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.2.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
