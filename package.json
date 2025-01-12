@@ -1,7 +1,7 @@
 {
   "name": "blockhain-indexer-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple blockchain indexer service",
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
