@@ -2,8 +2,8 @@ import { ethers } from 'ethers'
 import rpcProvider from '../../../providers/rpcProvider'
 import dbPrismaProvider from '../../../providers/dbPrismaProvider'
 import detectTokenTransfersWithTopics from './detectTokenTransfersWithTopics'
-import { AnalyzeResult, TokenTransfer, Transfer_Type } from '../../../types'
-import { ADDRESS_ZERO } from '../../../config'
+import { Transfer_Type } from '@/types/types'
+import { AnalyzeResult } from '@/types/types'
 
 const analyzeTransection = async (transaction: ethers.TransactionResponse) => {
   let result: AnalyzeResult = {
@@ -22,8 +22,8 @@ const analyzeTransection = async (transaction: ethers.TransactionResponse) => {
         type: Transfer_Type.ETH_TRANSFER,
         from: transaction.from as string,
         to: transaction.to as string,
-        value: transaction.value.toString(),
-        tokenAddress: ADDRESS_ZERO,
+        value: Number(transaction.value),
+        tokenAddress: config.ADDRESS_ZERO,
       },
     ]
     return result

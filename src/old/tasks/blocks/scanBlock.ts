@@ -1,4 +1,4 @@
-import task from '../../core/tasks/task'
+import task from '../../../core/tasks/task'
 import { blockScanner } from './helpers/blockScanner'
 
 const scanBlock = async (args: any) => {

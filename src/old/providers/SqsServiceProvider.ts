@@ -8,8 +8,7 @@ import {
   SendMessageBatchCommand,
   SendMessageCommand,
 } from '@aws-sdk/client-sqs'
-import { sqsClient } from '../core/clients/aws'
-import { AWS_ACCOUNT_ID, AWS_REGION } from '../config'
+import { sqsClient } from '@/core/clients/aws'
 
 const createQueue = async (
   queueName: string,
@@ -50,7 +49,7 @@ const sendMessageToQueue = async (
 }
 
 const getQueueUrl = (queueName: string) => {
-  return `https://sqs.${AWS_REGION}.amazonaws.com/${AWS_ACCOUNT_ID}/${queueName}`
+  return `https://sqs.${config.AWS.REGION}.amazonaws.com/${config.AWS.ACCOUNT_ID}/${queueName}`
 }
 
 const checkIfQueueExists = async (queueName: string): Promise<boolean> => {

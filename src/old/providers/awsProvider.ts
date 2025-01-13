@@ -1,10 +1,4 @@
 import {
-  AWS_REGION,
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  AWS_ACCOUNT_ID,
-} from '../config'
-import {
   CreateClusterCommand,
   DeleteClusterCommand,
   DescribeTaskDefinitionCommand,
@@ -27,8 +21,8 @@ import {
   DescribeSubnetsCommand,
   EC2Client,
 } from '@aws-sdk/client-ec2'
-import { ecsClient, ec2Client } from '../core/clients/aws'
-import { logger } from '../core/helpers/helpers'
+import { ecsClient, ec2Client } from '@/core/clients/aws'
+import { logger } from '@/core/helpers/helpers'
 const VPC_ID: any = null
 
 const getClusters = async () => {
@@ -319,8 +313,8 @@ const createTaskDefinition = async (
   image: string,
   environment?: { name: string; value: string }[],
 ) => {
-  const awsRegion = AWS_REGION || 'default-region'
-  const executionRoleArn = `arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole` // Replace with your execution role ARN
+  const awsRegion = config.AWS.REGION || 'default-region'
+  const executionRoleArn = `arn:aws:iam::${config.AWS.ACCOUNT_ID}:role/ecsTaskExecutionRole` // Replace with your execution role ARN
   const params = {
     family: family, // Name of your task family
     networkMode: NetworkMode.AWSVPC, // Network mode: 'bridge', 'host', 'awsvpc', or 'none'

@@ -1,6 +1,6 @@
 import { BlockStatus, Tokens, Transfers } from '@prisma/client'
-import dbClient from '../core/clients/db-prisma'
-import { Transfer_Type } from '../types'
+import dbClient from '@/core/clients/db-prisma'
+import { Transfer_Type } from '../../types/types'
 
 const contracts = {
   createToken: async (
@@ -108,6 +108,17 @@ const blocks = {
   getBlockStatus: async (blockNumber: number): Promise<any> => {
     return await dbClient.blocks.findUnique({
       where: { blockNumber },
+    })
+  },
+  getLastBlock: async (): Promise<any> => {
+    return await dbClient.blocks.findFirst({
+      orderBy: { blockNumber: 'desc' },
+    })
+  },
+  getLastBlockWithStatus: async (status: BlockStatus): Promise<any> => {
+    return await dbClient.blocks.findFirst({
+      where: { status: status },
+      orderBy: { blockNumber: 'desc' },
     })
   },
 }

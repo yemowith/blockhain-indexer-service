@@ -1,8 +1,8 @@
 import { TransferType } from '@prisma/client'
 import dbPrismaProvider from '../../../providers/dbPrismaProvider'
-import { AnalyzeResult, TokenTransfer } from '../../../types'
+import { AnalyzeResult, TokenTransfer } from '../../../../types/types'
 import rpcProvider from '../../../providers/rpcProvider'
-import { ADDRESS_ZERO } from '../../../config'
+import { config } from '@/config'
 
 const saveTokens = async (transfers: TokenTransfer[]) => {
   let tokens: {
@@ -13,7 +13,7 @@ const saveTokens = async (transfers: TokenTransfer[]) => {
   }[] = []
   for (const transfer of transfers) {
     if (
-      transfer.tokenAddress == ADDRESS_ZERO ||
+      transfer.tokenAddress == config.ADDRESS_ZERO ||
       transfer.tokenAddress == null
     ) {
       continue
@@ -66,7 +66,7 @@ const processAnalyzeResults = async (result: AnalyzeResult) => {
       to: result.to,
       value: result.value,
       type: null,
-      tokenAddress: ADDRESS_ZERO,
+      tokenAddress: config.ADDRESS_ZERO,
     }
     switch (tokenTransfer.type) {
       case 'ETH_TRANSFER':

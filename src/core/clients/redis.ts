@@ -1,9 +1,9 @@
 import IORedis from 'ioredis'
-import { REDIS_HOST, REDIS_PORT } from '../../config'
+import { config } from '@/config'
 
 const redisClient = new IORedis({
-  host: REDIS_HOST,
-  port: Number(REDIS_PORT),
+  host: config.REDIS.HOST,
+  port: Number(config.REDIS.PORT),
   maxRetriesPerRequest: null,
 })
 

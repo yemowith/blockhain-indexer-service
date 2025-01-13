@@ -1,5 +1,3 @@
-import { TransferType } from '@prisma/client'
-
 export interface AnalyzeResult {
   success: boolean
   to: string

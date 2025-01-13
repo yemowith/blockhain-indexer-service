@@ -1,5 +1,3 @@
-import { ENABLE_LOGGING } from '../../config'
-
 function toLowerCase(input: string): string {
   return input.toLowerCase()
 }
@@ -23,7 +21,7 @@ function createObjectsForChunks(number: number, chunkSize: number) {
 }
 
 function logger(message: string, data?: any) {
-  if (ENABLE_LOGGING) {
+  if (config.ENABLE_LOGGING) {
     if (data) {
       console.log(message, data)
     } else {

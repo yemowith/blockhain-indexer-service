@@ -1,5 +1,5 @@
 import Redis from 'ioredis'
-import redisClient from '../core/clients/redis'
+import redisClient from '@/core/clients/redis'
 
 const cacheProvider = {
   async set(key: string, value: any, ttlSeconds?: number) {

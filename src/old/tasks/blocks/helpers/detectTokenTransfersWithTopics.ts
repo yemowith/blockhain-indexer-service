@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { TokenTransfer, Transfer_Type } from '../../../types'
+import { TokenTransfer, Transfer_Type } from '../../../../types/types'
 
 // Event signatures
 const ERC20_TRANSFER_TOPIC =

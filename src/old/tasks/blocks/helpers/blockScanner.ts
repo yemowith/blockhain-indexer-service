@@ -1,11 +1,11 @@
 import { TransactionResponse } from 'ethers'
 import { BlockStatus } from '@prisma/client'
 import analyzeTransection from './analyzeTransection'
-import TaskQueue from '../../../core/libs/TaskQueue'
-import task from '../../../core/tasks/task'
+import TaskQueue from '../../../../core/libs/TaskQueue'
+import task from '../../../../core/tasks/task'
 import rpcProvider from '../../../providers/rpcProvider'
 import dbPrismaProvider from '../../../providers/dbPrismaProvider'
-import Logger from '../../../core/helpers/logger'
+import Logger from '../../../../core/helpers/logger'
 import processAnalyzeResults from './processAnalyzeResults'
 
 interface ScanBlockArgs {

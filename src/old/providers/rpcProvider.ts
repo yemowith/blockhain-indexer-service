@@ -1,11 +1,9 @@
 import { ethers } from 'ethers'
-import { RPC_URL } from '../config'
-import ERC20_ABI from '../data/ERC20_ABI'
-import TaskQueue from '../core/libs/TaskQueue'
-import retryWithDelay from '../core/libs/Retryer'
+import retryWithDelay from '@/core/libs/Retryer'
+import { ERC20_ABI } from '@/constants/abis'
 
 // Initialize the provider
-const provider = new ethers.JsonRpcProvider(RPC_URL)
+const provider = new ethers.JsonRpcProvider(config.RPC_URL)
 
 const rpcProvider = {
   scanBlock: async (blockNumber: number): Promise<void> => {
