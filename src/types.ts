@@ -1,41 +1,28 @@
-export type ContainerInstanceType = {
-  permutations(): number
-  getPermutationByIndex: (index: number) => MnemonicInstanceType
-  getMnemonic: () => MnemonicInstanceType
-  getContainerId: () => string
+import { TransferType } from '@prisma/client'
+
+export interface AnalyzeResult {
+  success: boolean
+  to: string
+  from: string
+  value: number
+  tokenTransfers: TokenTransfer[]
+  blockNumber: number
+  transactionHash: string
 }
 
-export type MnemonicInstanceType = {
-  toAlphabetObject: () => Record<string, string>
-  toObject: () => Record<string, string>
-  toString: () => string
-  validate: () => boolean
-  toArray: () => string[]
+export enum Transfer_Type {
+  ETH_TRANSFER = 'ETH_TRANSFER',
+  ERC20_TRANSFER = 'ERC20_TRANSFER',
+  ERC20_APPROVAL = 'ERC20_APPROVAL',
+  ERC721_TRANSFER = 'ERC721_TRANSFER',
+  ERC1155_TRANSFER_SINGLE = 'ERC1155_TRANSFER_SINGLE',
+  ERC1155_TRANSFER_BATCH = 'ERC1155_TRANSFER_BATCH',
 }
 
-export type ContainerRowData = {
-  containerId: string
-  slug: string
-  createdAt: string
-  isStarted: boolean
-  isDone: boolean
-  status: string
-  mnemonic: string
-  [key: string]: any
-}
-
-export type RowInstanceType = {
-  getId: () => string
-  isStarted: () => boolean
-  isDone: () => boolean
-  status: () => string
-  setStatus: (status: string) => Promise<void>
-  setAsStarted: () => Promise<void>
-  setAsDone: () => Promise<void>
-  addData: (key: string, value: any) => Promise<void>
-  getData: (key: string) => Promise<any>
-  get: () => Promise<ContainerRowData>
-  save: () => Promise<void>
-  getMnemonic?: () => MnemonicInstanceType // Optional, based on the root-service implementation
-  getSlug: () => string
+export type TokenTransfer = {
+  type: Transfer_Type | any
+  from: string
+  to: string
+  value: number | string
+  tokenAddress: string
 }

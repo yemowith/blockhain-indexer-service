@@ -18,17 +18,8 @@ model Contracts {
   address  String  @unique @db.VarChar(42)
   isERC20  Boolean @default(false)
   isERC721 Boolean @default(false)
-}
 
-model Transfers {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  from            String   @db.VarChar(42)
-  to              String   @db.VarChar(42)
-  value           Int
-  blockNumber     Int
-  transactionHash String   @db.VarChar(66)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  @@index([address])
 }
 
 model Tokens {
@@ -36,19 +27,56 @@ model Tokens {
   address   String   @db.VarChar(42)
   symbol    String?  @db.VarChar(10)
   name      String?  @db.VarChar(100)
-  decimals  Int
+  decimals  Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([address])
+  @@index([address])
 }
 
-model TokenTransfers {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  tokenId         String   @db.Uuid
-  from            String   @db.VarChar(42)
-  to              String   @db.VarChar(42)
-  value           Int
+enum TransferType {
+  ETH_TRANSFER
+  ERC20_TRANSFER
+  ERC20_APPROVAL
+  ERC721_TRANSFER
+  ERC1155_TRANSFER_SINGLE
+  ERC1155_TRANSFER_BATCH
+}
+
+model Transfers {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  type            TransferType? @default(ETH_TRANSFER)
+  tokenAddress    String?       @db.VarChar(42)
+  from            String        @db.VarChar(42)
+  to              String        @db.VarChar(42)
+  value           String        @db.VarChar(78)
   blockNumber     Int
-  transactionHash String   @db.VarChar(66)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  transactionHash String        @db.VarChar(66)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([transactionHash, type, tokenAddress])
+  @@index([transactionHash, type, tokenAddress])
+  @@index([to, from])
+  @@index([tokenAddress, from])
+  @@index([tokenAddress, to])
+}
+
+enum BlockStatus {
+  PENDING
+  SCANNING
+  PROCESSED
+  FAILED
+}
+
+model Blocks {
+  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  blockNumber Int
+  status      BlockStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([blockNumber])
+  @@index([blockNumber])
 }

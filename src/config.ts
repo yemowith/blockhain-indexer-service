@@ -20,3 +20,5 @@ export const ENABLE_LOGGING = process.env.ENABLE_LOGGING === 'true'
 
 export const CHAIN_ID = process.env.CHAIN_ID
 export const RPC_URL = process.env.RPC_URL
+
+export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
