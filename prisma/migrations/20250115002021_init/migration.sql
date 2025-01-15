@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Operation" ADD COLUMN     "totalBlocks" INTEGER NOT NULL DEFAULT 0,
+ALTER COLUMN "batchSize" SET DEFAULT 100,
+ALTER COLUMN "lastProcessedBlock" SET DEFAULT 0;

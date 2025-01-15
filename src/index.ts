@@ -1,5 +1,5 @@
 // src/index.ts
-import { bootstrap } from './bootstrap'
+import { bootstrap } from './core/bootstrap'
 
 // Initialize globals
 bootstrap()

@@ -1,16 +1,22 @@
 import { ethers } from 'ethers'
-import { Logger } from '../utils/logger'
+
 import * as Constants from '../constants'
+import { task } from '../core/tasks/task'
+import Logger from '@/core/helpers/logger'
+import { Config } from '@/config/config'
 
 declare global {
   var logger: Logger
-  var config: typeof config
-
+  var config: Config
+  var task: typeof Task
   namespace NodeJS {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production' | 'test'
-      RPC_URL: string
-      // Add other env variables
+    }
+    interface Global {
+      logger: Logger
+      config: any
+      task: typeof Task
     }
   }
 }

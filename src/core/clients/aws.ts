@@ -2,7 +2,8 @@ import { ECSClient } from '@aws-sdk/client-ecs'
 
 import { EC2Client } from '@aws-sdk/client-ec2'
 import { SQSClient } from '@aws-sdk/client-sqs'
-
+import { S3Client } from '@aws-sdk/client-s3'
+import { config } from '../../config/config'
 const ecsClient = new ECSClient({
   region: config.AWS.REGION,
   credentials: {
@@ -21,4 +22,12 @@ const ec2Client = new EC2Client({
 
 const sqsClient = new SQSClient({ region: config.AWS.REGION })
 
-export { sqsClient, ecsClient, ec2Client }
+const s3Client = new S3Client({
+  region: config.AWS.REGION,
+  credentials: {
+    accessKeyId: config.AWS.ACCESS_KEY_ID as string,
+    secretAccessKey: config.AWS.SECRET_ACCESS_KEY as string,
+  },
+})
+
+export { sqsClient, ecsClient, ec2Client, s3Client }

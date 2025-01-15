@@ -13,70 +13,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Contracts {
-  id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  address  String  @unique @db.VarChar(42)
-  isERC20  Boolean @default(false)
-  isERC721 Boolean @default(false)
-
-  @@index([address])
+model Operation {
+  id                    String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  totalBatches          Int      @default(0)
+  totalBatchesCompleted Int      @default(0)
+  totalBatchesFailed    Int      @default(0)
+  totalBatchesPending   Int      @default(0)
+  startBlock            Int      @default(0)
+  endBlock              Int      @default(0)
+  lastBlock             Int      @default(0)
+  batchSize             Int      @default(100)
+  lastProcessedBlock    Int      @default(0)
+  totalBlocks           Int      @default(0)
+  status                String   @default("pending")
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  batches               Batch[]
 }
 
-model Tokens {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  address   String   @db.VarChar(42)
-  symbol    String?  @db.VarChar(10)
-  name      String?  @db.VarChar(100)
-  decimals  Int?
+model Batch {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  operationId String    @db.Uuid // Add @db.Uuid here to match the Operation id type
+  operation   Operation @relation(fields: [operationId], references: [id])
+  startBlock  Int
+  endBlock    Int
+  status      String    @default("pending")
+  count       Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([address])
-  @@index([address])
-}
-
-enum TransferType {
-  ETH_TRANSFER
-  ERC20_TRANSFER
-  ERC20_APPROVAL
-  ERC721_TRANSFER
-  ERC1155_TRANSFER_SINGLE
-  ERC1155_TRANSFER_BATCH
-}
-
-model Transfers {
-  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  type            TransferType? @default(ETH_TRANSFER)
-  tokenAddress    String?       @db.VarChar(42)
-  from            String        @db.VarChar(42)
-  to              String        @db.VarChar(42)
-  value           String        @db.VarChar(78)
-  blockNumber     Int
-  transactionHash String        @db.VarChar(66)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  @@unique([transactionHash, type, tokenAddress])
-  @@index([transactionHash, type, tokenAddress])
-  @@index([to, from])
-  @@index([tokenAddress, from])
-  @@index([tokenAddress, to])
-}
-
-enum BlockStatus {
-  PENDING
-  SCANNING
-  PROCESSED
-  FAILED
-}
-
-model Blocks {
-  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  blockNumber Int
-  status      BlockStatus @default(PENDING)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  @@unique([blockNumber])
-  @@index([blockNumber])
 }

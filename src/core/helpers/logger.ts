@@ -89,6 +89,10 @@ export class Logger {
     this.logger.warn(message, meta)
   }
 
+  public success(message: string, meta?: any): void {
+    this.logger.info(message, meta)
+  }
+
   public error(message: string, error?: Error | unknown, meta?: any): void {
     const errorMeta =
       error instanceof Error

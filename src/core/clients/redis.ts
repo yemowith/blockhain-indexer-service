@@ -1,5 +1,5 @@
 import IORedis from 'ioredis'
-import { config } from '@/config'
+import { config } from '@/config/config'
 
 const redisClient = new IORedis({
   host: config.REDIS.HOST,
