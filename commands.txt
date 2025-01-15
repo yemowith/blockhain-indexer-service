@@ -1,25 +1,26 @@
 
-docker tag wallet-container-service:latest sayedsoft/wallet-container-service:latest
+docker tag blockchain-index-batch-runner:latest sayedsoft/blockchain-index-batch-runner:latest
+
 ------
-docker push sayedsoft/wallet-container-service:latest
+docker push sayedsoft/blockchain-index-batch-runner:latest
+
 ------
 rebuild
 docker system prune -a
-docker build -t wallet-container-service:latest .
+docker build -t blockchain-index-batch-runner:latest .
 
 
 ------
 Firstly login to aws ecr
 aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 913524904473.dkr.ecr.eu-north-1.amazonaws.com
-
 -----------
-then create repository
-aws ecr create-repository --repository-name wallet-container-service
 
+then create repository
+aws ecr create-repository --repository-name blockchain-index-batch-runner
 ------- 
 add tag to image
-docker tag wallet-container-service:v1.0 913524904473.dkr.ecr.eu-north-1.amazonaws.com/wallet-container-service:v1.0
+docker tag blockchain-index-batch-runner:v1.0 913524904473.dkr.ecr.eu-north-1.amazonaws.com/blockchain-index-batch-runner:latest
 
 -----------
 push to aws ecr
-docker push 913524904473.dkr.ecr.eu-north-1.amazonaws.com/wallet-container-service:v1.0
+docker push 913524904473.dkr.ecr.eu-north-1.amazonaws.com/blockchain-index-batch-runner:latest

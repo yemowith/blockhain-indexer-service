@@ -12,7 +12,7 @@ const registeredTasks: any[] = [
     task: archiveTask,
   },
   {
-    name: 'run-batch',
+    name: 'batch-run',
     task: batchRunTask,
   },
 ]

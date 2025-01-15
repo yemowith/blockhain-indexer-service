@@ -94,7 +94,6 @@ const operation = {
       throw error
     }
   },
-  getFirstPending: async (): Promise<any> => {},
 }
 
 const batch = {
@@ -152,6 +151,16 @@ const batch = {
       logger.error(`Error updating batch status: ${error}`)
       throw error
     }
+  },
+  getFirstPending: async (): Promise<Batch | null> => {
+    return await dbClient.batch.findFirst({
+      where: {
+        status: 'pending',
+      },
+      orderBy: {
+        startBlock: 'asc',
+      },
+    })
   },
 }
 

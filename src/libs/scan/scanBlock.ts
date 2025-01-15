@@ -6,7 +6,6 @@ import { BlockScanInfo, TransactionInfo } from '@/types/types'
 import { Block, TransactionResponse } from 'ethers'
 import { ScanTransaction } from './scanTransection'
 import Logger from '@/core/helpers/logger'
-import pLimit from 'p-limit'
 import processWithConcurrency from '@/core/helpers/promisePool'
 
 class ScanBlock {
@@ -29,15 +28,20 @@ class ScanBlock {
   }
 
   private getCacheKey(): string {
-    if (!this.batchId || !this.operationId) {
-      return `${ScanBlock.BLOCK_SCAN_PREFIX}:${this.blockNumber}`
-    } else if (this.batchId && this.operationId) {
-      return `${ScanBlock.BLOCK_SCAN_PREFIX}:${this.batchId}:${this.operationId}:${this.blockNumber}`
-    } else if (this.batchId) {
-      return `${ScanBlock.BLOCK_SCAN_PREFIX}:${this.batchId}:${this.blockNumber}`
-    } else {
-      return `${ScanBlock.BLOCK_SCAN_PREFIX}:${this.blockNumber}`
+    const prefix = ScanBlock.BLOCK_SCAN_PREFIX
+    const parts = [prefix]
+
+    if (this.batchId?.trim()) {
+      parts.push(this.batchId)
     }
+
+    if (this.operationId?.trim()) {
+      parts.push(this.operationId)
+    }
+
+    parts.push(this.blockNumber.toString())
+
+    return parts.join(':')
   }
 
   // Get block scan status
@@ -66,6 +70,8 @@ class ScanBlock {
       cacheKey,
       scanInfo,
     )
+
+    this.logger.info(`${this.blockNumber} Block scan status set: ${status}`)
   }
 
   private async getBlockTransactions(): Promise<TransactionInfo[]> {
@@ -142,6 +148,7 @@ class ScanBlock {
   // Process single transaction
   private async processTransaction(
     tx: TransactionInfo,
+    index: number,
   ): Promise<TransactionInfo> {
     try {
       const receipt = await rpcProvider.getTransactionReceipt(tx.hash)
@@ -153,7 +160,7 @@ class ScanBlock {
       const result = await scanner.scan()
 
       this.logger.info(
-        `Transaction processed: with ${result.transfers.length} transfers`,
+        ` ${index}. Transaction processed: ${result.transfers.length} transfers`,
       )
 
       return {
@@ -180,7 +187,7 @@ class ScanBlock {
     for (let i = 0; i < transactions.length; i += batchSize) {
       const batch = transactions.slice(i, i + batchSize)
       const batchResults = await Promise.all(
-        batch.map((tx) => this.processTransaction(tx)),
+        batch.map((tx) => this.processTransaction(tx, i)),
       )
 
       await this.setBlockScanStatus(BlockScanStatus.RUNNING, {
@@ -215,8 +222,21 @@ class ScanBlock {
       // Set initial status
       await this.setBlockScanStatus(BlockScanStatus.RUNNING)
 
-      // Get all transactions
-      const transactions = await this.getBlockTransactions()
+      let transactions: TransactionInfo[] = []
+      try {
+        // Get all transactions
+        transactions = await this.getBlockTransactions()
+      } catch (error) {
+        this.logger.error(
+          `Failed to get transactions for block ${this.blockNumber}:`,
+          error,
+        )
+        throw error
+      }
+
+      this.logger.info(
+        `${this.blockNumber} Transactions found: ${transactions.length}`,
+      )
 
       // Update status to running
       await this.setBlockScanStatus(BlockScanStatus.RUNNING, {

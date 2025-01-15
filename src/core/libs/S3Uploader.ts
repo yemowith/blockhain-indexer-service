@@ -7,6 +7,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { createReadStream, statSync } from 'fs'
 import { Readable } from 'stream'
+import byteConverter from './ByteConverter'
 
 interface UploadOptions {
   contentType?: string
@@ -17,8 +18,8 @@ interface UploadOptions {
 class S3Uploader {
   private client: S3Client
   private bucket: string
-  private readonly normalSize = 100 * 1024 * 1024 // 10 MB
-  private readonly partSize = 50 * 1024 * 1024 // 5 MB
+  private readonly normalSize = byteConverter.toBytes(200, 'MB') // 10 MB
+  private readonly partSize = byteConverter.toBytes(200, 'MB') // 5 MB
 
   constructor(client: S3Client, bucket: string) {
     this.client = client
@@ -33,6 +34,10 @@ class S3Uploader {
     return fileSize > this.normalSize
   }
 
+  public isBigFileSize(fileSize: number): boolean {
+    return fileSize > this.normalSize
+  }
+
   /**
    * Upload a file to S3, choosing the method based on file size
    */
@@ -42,8 +47,10 @@ class S3Uploader {
     options: UploadOptions = {},
   ): Promise<string> {
     if (this.isBigFile(filePath)) {
+      logger.info('Uploading large file using multipart upload')
       return this.multipartUpload(key, filePath, options)
     } else {
+      logger.info('Uploading small file using normal upload')
       return this.normalUpload(key, filePath, options)
     }
   }
@@ -108,6 +115,7 @@ class S3Uploader {
       })
       const uploadPartResponse = await this.client.send(uploadPartCommand)
       parts.push({ ETag: uploadPartResponse.ETag, PartNumber: partNumber })
+      console.log('partNumber', partNumber)
       partNumber++
     }
 

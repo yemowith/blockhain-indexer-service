@@ -14,6 +14,7 @@ import fs from 'fs'
 import { s3Client } from '@/core/clients/aws'
 import S3Uploader from '@/core/libs/S3Uploader'
 import FileWriter from './fileWriters/FileWriter'
+import cacheProvider, { CACHE_GROUPS } from '@/core/providers/cacheProvider'
 
 class BatchRunner {
   batch: Batch
@@ -50,6 +51,13 @@ class BatchRunner {
       fs.mkdirSync(path.dirname(file), { recursive: true })
       resolve(file)
     })
+  }
+
+  private async removeFile() {
+    this.logger.info(`Removing file ${this.filePath}`)
+    if (fs.existsSync(this.filePath)) {
+      fs.unlinkSync(this.filePath)
+    }
   }
 
   private async uploadFile() {
@@ -204,7 +212,19 @@ class BatchRunner {
 
     await this.uploadFile()
 
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    await this.removeFile()
+
     await this.updateBatchStatus('completed')
+  }
+
+  async updateBatchProgress(result: any) {
+    await cacheProvider.set(
+      CACHE_GROUPS.ARCHIVE_OPERATION_BATCH,
+      this.batch.id,
+      result,
+    )
   }
 
   async run() {
@@ -232,20 +252,15 @@ class BatchRunner {
           result.blocksFailed++
         }
 
-        if (i % 100 === 0) {
-          result.blocksToScan = countBlocks - result.blocksDone
-          result.progressPercentage = (result.blocksDone / countBlocks) * 100
-        }
+        result.blocksToScan = countBlocks - result.blocksDone
+        result.progressPercentage = parseFloat(
+          ((result.blocksDone / countBlocks) * 100).toFixed(2),
+        )
 
-        if (i % 100 === 0) {
-          result.blocksToScan = countBlocks - result.blocksDone
-          result.progressPercentage = (result.blocksDone / countBlocks) * 100
-        }
+        await this.updateBatchProgress(result)
 
         this.logger.info(`Batch result: ${JSON.stringify(result)}`)
       }
-
-      this.logger.info(`Batch result: ${JSON.stringify(result)}`)
 
       await this.afterRun()
     } catch (error) {

@@ -12,6 +12,10 @@
     "nm": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ",
     "task:archive:dev": "npm run nm src/cli-task.ts archive-task",
     "task:archive": "node dist/cli-task.js archive-task",
+    "task:batch:dev": "npm run nm src/cli-task.ts batch-run",
+    "task:batch": "node dist/cli-task.js batch-run",
+    "archive-task:dev": "npm run nm src/cli-task.ts archive-task",
+    "archive-task": "node dist/cli-task.js archive-task",
     "tester": "npm run nm src/test.ts"
   },
   "dependencies": {

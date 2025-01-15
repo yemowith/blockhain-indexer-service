@@ -34,7 +34,7 @@ export const CACHE_GROUPS = createCacheGroups({
 
   ARCHIVE_OPERATION_BATCH: {
     name: 'operation-batch',
-    prefix: 'ops:archive:batchs:',
+    prefix: 'ops:batchs:',
     ttl: 86400,
   },
 

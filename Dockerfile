@@ -8,6 +8,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
+RUN npm install -g pm2
+
+RUN npm install -g prisma
+
 # Copy source code
 COPY . .
 
@@ -18,4 +22,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["pm2-runtime", "ecosystem.config.js"]
