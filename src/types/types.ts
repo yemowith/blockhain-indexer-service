@@ -1,3 +1,14 @@
+export interface BatchResult {
+  blocksDone: number
+  blocksFailed: number
+  blocksToScan: number
+  countBlocks: number
+  progressPercentage: number
+  transfersCount?: number
+  walletsCount?: number
+  [key: string]: any
+}
+
 export interface TransactionResult {
   success: boolean
   to: string
@@ -157,4 +168,21 @@ export type ArchiveOperation = {
 export type ArchiveOperationInfo = {
   info: ArchiveOperation
   batches: Batch[]
+}
+
+export interface IExporter {
+  init(): Promise<void>
+  beforeBatchRun(): Promise<void>
+  afterBatchRun(
+    result: BatchResult,
+  ): Promise<{
+    [key: string]: any
+  }>
+  afterBlockScan(result: {
+    blockNumber: number
+    status: BlockScanStatus
+    transections: TransactionInfo[]
+  }): Promise<{
+    [key: string]: any
+  }>
 }

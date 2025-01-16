@@ -16,10 +16,11 @@ const batchRunTask = async (args: any) => {
         return null
       }
 
-      console.log('batch', batch)
+      logger.info(`Processing batch ${batch.id}`)
 
       try {
         const batchRunner = new BatchRunner(batch)
+
         await batchRunner.run()
         return batch
       } catch (error) {

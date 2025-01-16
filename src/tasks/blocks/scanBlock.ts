@@ -1,4 +1,3 @@
-import OperationHelper from '@/libs/operation/OperationHelper'
 import ScanBlock from '@/libs/scan/scanBlock'
 
 const scanBlockTask = async (args: any) => {

@@ -3,21 +3,14 @@ import parquetjs, { ParquetWriter } from '@dsnp/parquetjs'
 class ParquetFileWriter {
   private filePath: string
   private parquetWriter: ParquetWriter | null = null
-
-  constructor(filePath: string) {
+  private schema: any
+  constructor(filePath: string, schema: any) {
     this.filePath = filePath
+    this.schema = schema
   }
 
   async init() {
-    const schema = new parquetjs.ParquetSchema({
-      tType: { type: 'UTF8' },
-      tFrom: { type: 'UTF8' },
-      tTo: { type: 'UTF8' },
-      tValue: { type: 'UTF8' },
-      tTokenAdrs: { type: 'UTF8' },
-      blckNum: { type: 'INT32' },
-      txHash: { type: 'UTF8' },
-    })
+    const schema = new parquetjs.ParquetSchema(this.schema)
 
     this.parquetWriter = await parquetjs.ParquetWriter.openFile(
       schema,

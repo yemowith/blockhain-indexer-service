@@ -7,14 +7,17 @@ class FileWriter {
   private selectedWriter: ParquetFileWriter | CVSFileWriter | null = null
   public writer: 'cvs' | 'parquet' = 'parquet'
 
-  constructor(filePath: string, writer: 'cvs' | 'parquet') {
+  public schema: any
+
+  constructor(filePath: string, writer: 'cvs' | 'parquet', schema: any) {
     this.filePath = filePath
     this.writer = writer
+    this.schema = schema
   }
 
   async init() {
     if (this.writer === 'parquet') {
-      this.selectedWriter = new ParquetFileWriter(this.filePath)
+      this.selectedWriter = new ParquetFileWriter(this.filePath, this.schema)
     } else if (this.writer === 'cvs') {
       this.selectedWriter = new CVSFileWriter(this.filePath)
     } else {

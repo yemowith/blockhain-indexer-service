@@ -217,6 +217,13 @@ class S3Provider {
     }
   }
 
+  async deleteFolder(prefix: string = '') {
+    const objects = await this.list(prefix)
+    for (const obj of objects) {
+      await this.delete(obj.key, this.bucket)
+    }
+  }
+
   /**
    * List objects in a directory
    */

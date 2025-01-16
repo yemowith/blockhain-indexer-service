@@ -18,6 +18,7 @@ export const config = {
     USER: process.env.PG_USER,
     PASSWORD: process.env.PG_PASSWORD,
   },
+  BASE_STORAGE_PATH: process.env.BASE_STORAGE_PATH,
   ENABLE_LOGGING: process.env.ENABLE_LOGGING === 'true',
   CHAIN_ID: process.env.CHAIN_ID,
   RPC_URL: process.env.RPC_URL,
